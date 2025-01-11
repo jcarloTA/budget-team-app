@@ -17,7 +17,6 @@ export const login = async (email: string, password: string): Promise<LoginRespo
       password,
     });
 
-    console.log('Login successful:', response.data);
     const data = response.data;
 
     // Guardar el token en AsyncStorage

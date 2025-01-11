@@ -48,7 +48,6 @@ export default function HomeAdminScreen() {
 	};
 
 	const onSelect = (id: number) => {
-		console.log("onSelect", id);
         navigation.navigate("budgetScreen", { teamId: id });
 	};
 

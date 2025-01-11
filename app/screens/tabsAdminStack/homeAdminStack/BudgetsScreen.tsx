@@ -24,15 +24,12 @@ export const BudgetsScreen = ({ route }: CreateREquestProps) => {
 	}, [teamId]);
 
 	const loadBudgets = () => {
-		console.log("teamId", teamId);
 		if (teamId) {
 			getBudgetsByTeamId(teamId);
 		}
 	};
 
 	const onSelect = (id: number) => {
-		console.log("onSelect", id);
-		// Navegar a la pantalla de detalle del presupuesto
 		navigation.navigate("requestListToAprove", { budgetId: id });
 	};
 

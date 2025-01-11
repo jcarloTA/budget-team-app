@@ -9,7 +9,6 @@ import apiAxios from '../config/axios.config';
 export const fetchBudgets = async () => {
   try {
     const response = await apiAxios.get('/budget'); // Ajusta la ruta según tu API
-    console.log('Budgets0:', response.data);
     return response.data; // Devuelve las solicitudes recibidas
   } catch (error: any) {
     console.error('Error fetching budgets:', error);
@@ -20,7 +19,6 @@ export const fetchBudgets = async () => {
 export const fetchBudgetsByTeamId = async (teamId: number) => {
   try {
     const response = await apiAxios.get(`/budget/team/${teamId}`); // Ajusta la ruta según tu API
-    console.log('Budgets1:', response.data);
     return response.data; // Devuelve las solicitudes recibidas
   } catch (error: any) {
     console.error('Error fetching budgets:', error);

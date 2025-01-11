@@ -11,7 +11,6 @@ apiAxios.interceptors.request.use(
     // Recuperar el token de AsyncStorage (o donde lo hayas almacenado)
     const data = await getDataToken();
     
-    console.log('Data:', data);
     if (data) {
       // Si hay un token, lo añadimos como Authorization: Bearer <token> en los headers
       config.headers['Authorization'] = `Bearer ${data.accessToken}`;

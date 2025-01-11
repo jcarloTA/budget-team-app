@@ -17,7 +17,6 @@ export const useRequest = () => {
         setLoadingRequests(true);
         try {
             const response = await fetchRequests();
-            console.log("requests:", response);
             setRequests(response);
         } catch (error) {
             Alert.alert("Error", "Error al obtener los requests");
@@ -30,7 +29,6 @@ export const useRequest = () => {
         setLoadingRequestByBudget(true);
         try {
             const response = await fetchRequestsByBudgetId(budgetId);
-            console.log("requests by budget:", response);
             setRequestsByBudget(response);
         } catch (error) {
             Alert.alert("Error", "Error al obtener los requests por budget");
@@ -44,8 +42,6 @@ export const useRequest = () => {
         setLoadingCreateRequest(true);
         try {
             const response = await createRequest(requestData);
-            console.log("create requests:", response);
-
             return response;
         } catch (error) {
             Alert.alert("Error", "Error al obtener los requests");

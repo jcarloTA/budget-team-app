@@ -35,7 +35,6 @@ export default function CreateRequestScreen({route}: CreateREquestProps) {
                 budgetId: budgetId
             }
             const response = await createRequestPost(requestData);
-            console.log("create requests:", response);
             Alert.alert("Solicitud creada", "La solicitud ha sido creada correctamente.");
             setReason("");
             setDescription("");

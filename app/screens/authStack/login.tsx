@@ -28,7 +28,6 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
     setIsLoading(true);
     try {
       const dataLogin = await login(email, password); // Llamada al servicio de login
-      console.log('Login data:', dataLogin);
       Alert.alert('Login Successful', 'Welcome back!');
 
       if(dataLogin.user.role === 'admin'){

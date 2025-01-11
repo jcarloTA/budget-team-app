@@ -35,14 +35,12 @@ export default function RequestListScreen({ route }: CreateREquestProps) {
 	);
 
 	const loadRequests = () => {
-		console.log("budgetId", budgetId);
 		if (budgetId) {
 			getRequestsByBudgetId(budgetId);
 		}
 	};
 
 	const onSelect = (request: RequestInterface) => {
-		console.log("onSelect", request);
 		// Navegar a la pantalla de detalle del presupuesto
 		navigation.navigate("requestToAprove", request);
 	};
@@ -70,7 +68,7 @@ export default function RequestListScreen({ route }: CreateREquestProps) {
 				{requestsByBudget.map((request) => (
 					<List.Item
 						key={request.id}
-						title={request.reason}
+						title={`Solicitud No. ${request.id}`} // Mostrar el número de solicitud
 						description={`${request.description} - Q${request.requestedAmount}`} // Mostrar monto con formato de moneda
 						left={() => (
 							<View

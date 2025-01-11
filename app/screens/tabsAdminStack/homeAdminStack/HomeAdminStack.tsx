@@ -40,7 +40,7 @@ export default function HomeAdminStackScreen() {
              <HomeAdminStack.Screen
                 name="requestToAprove"
                 options={{
-                    title: "Solicitudes de presupuesto",
+                    title: "Detalle de solicitud",
                 }}
                 component={RequestDetailScreen}
             />

@@ -16,7 +16,6 @@ export const useBudget = () => {
 		setLoadingBudget(true);
 		try {
 			const response = await fetchBudgets();
-			console.log("Budgets:", response);
 			setBudgets(response);
 		} catch (error) {
 			Alert.alert("Error", "Error al obtener los presupuestos");
@@ -29,7 +28,7 @@ export const useBudget = () => {
 		setLoadingBudgetByTeam(true);
 		try {
 			const response = await fetchBudgetsByTeamId(teamId);
-			console.log("Budgets by team:", response);
+			("Budgets by team:", response);
 			setBudgetByTeam(response);
 		} catch (error) {
 			Alert.alert("Error", "Error al obtener los presupuestos por equipo");

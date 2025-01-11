@@ -16,7 +16,6 @@ export const useTeam = () => {
         setLoadingTeams(true);
         try {
             const response = await fetchTeams();
-            console.log("teams:", response);
             setTeams(response);
         } catch (error) {
             Alert.alert("Error", "Error al obtener los equipos");

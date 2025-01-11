@@ -38,7 +38,6 @@ export const fetchRequestsByBudgetId = async (budgetId: number) => {
 export const changeStatusRequest = async (requestId: number, status: string) => {
   try {
     const response = await apiAxios.patch(`/request/${requestId}/status`, { status }); // Ajusta la ruta según tu API
-    console.log('changeStatusRequest', response.data);
     return response.data; // Devuelve la solicitud actualizada
   } catch (error: any) {
     console.error('Error changing request status:', error);
