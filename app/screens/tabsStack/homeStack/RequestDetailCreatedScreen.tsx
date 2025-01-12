@@ -21,7 +21,7 @@ type CreateREquestProps = {
 		params: RequestInterface;
 	};
 };
-const RequestDetailScreen: React.FC<any> = ({ route }: CreateREquestProps) => {
+const RequestDetailCreatedScreen: React.FC<any> = ({ route }: CreateREquestProps) => {
 	const [fileUri, setFileUri] = useState<string | null>(null); // URI del archivo seleccionado
 	const [approvalStatus, setApprovalStatus] = useState<
 		"pending" | "approved" | "rejected"
@@ -140,26 +140,7 @@ const RequestDetailScreen: React.FC<any> = ({ route }: CreateREquestProps) => {
 				Subir archivo
 			</Button>
 
-			{/* Botones para aprobar o rechazar */}
-			{approvalStatus === "pending" && (
-				<View style={styles.buttonsContainer}>
-					<Button
-						mode="contained"
-						onPress={() => handleConfirmation("approved")}
-						style={styles.approveButton}
-					>
-						Aprobar solicitud
-					</Button>
-					<Button
-						mode="contained"
-						onPress={() => handleConfirmation("rejected")}
-						style={styles.rejectButton}
-					>
-						Rechazar solicitud
-					</Button>
-				</View>
-			)}
-
+		
 			{proofs.map((proof) => (
 				<List.Item
 					key={proof.id}
@@ -218,4 +199,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default RequestDetailScreen;
+export default RequestDetailCreatedScreen;

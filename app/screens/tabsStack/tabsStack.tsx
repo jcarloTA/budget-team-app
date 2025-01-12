@@ -4,7 +4,7 @@ import { Pressable } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import TabOneScreen from './homeStack/tabOne';
+import TabOneScreen from './homeStack/homeScreen';
 import TabTwoScreen from './two';
 import HomeStackScreen from './homeStack/homeStack';
 

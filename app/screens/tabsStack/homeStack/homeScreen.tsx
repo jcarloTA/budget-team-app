@@ -1,4 +1,4 @@
-import { StyleSheet, View,ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 
 import { useEffect } from "react";
 import { useBudget } from "../../../hooks/use.budget";
@@ -13,10 +13,12 @@ import { TabBarIcon } from "../tabsStack";
 import React from "react";
 import Colors from "../../../constants/Colors";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { RequestInterface } from "../../../interfaces/request.interface";
 
 type RootStackParamList = {
-  create: { budgetId: number };
-  // other routes can be added here
+	create: { budgetId: number };
+	requestCreatedDetail: RequestInterface;
+	// other routes can be added here
 };
 export default function TabOneScreen() {
 	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -24,16 +26,19 @@ export default function TabOneScreen() {
 	const { getRequests, requests, loadingRequest } = useRequest();
 	const theme: any = useTheme();
 
-
 	useEffect(() => {
 		navigation.setOptions({
 			headerShown: true,
 			title: "Inicio",
 			headerRight: () => (
 				<>
-					<Button onPress={() => navigation.navigate("create", {
-					 budgetId: budgets[0]?.id
-					})}>
+					<Button
+						onPress={() =>
+							navigation.navigate("create", {
+								budgetId: budgets[0]?.id,
+							})
+						}
+					>
 						<FontAwesome size={16} name="plus" />
 					</Button>
 					<Button onPress={() => getData()}>
@@ -53,6 +58,10 @@ export default function TabOneScreen() {
 		getBudgets();
 		getRequests();
 	};
+
+	const seeDetail = (request: RequestInterface) => {
+		navigation.navigate("requestCreatedDetail", request);
+	}
 
 	if (loadingBudget || loadingRequest || !budgets || budgets.length === 0) {
 		return (
@@ -111,9 +120,20 @@ export default function TabOneScreen() {
 							<View>
 								<Text
 									variant="titleLarge"
-									style={{ ...styles.textDark, color: theme.colors.pending }}
+									style={{
+										...styles.textDark,
+										color: {
+											pending: theme.colors.primary,
+											approved: "green",
+											rejected: "red",
+										}[request.status],
+									}}
 								>
-									Pendiente
+									{request.status === "pending"
+										? "Pendiente"
+										: request.status === "approved"
+										? "Aprobado"
+										: "Rechazado"}
 								</Text>
 								<Text variant="bodyMedium" style={styles.textSubLight}>
 									Estado
@@ -121,7 +141,7 @@ export default function TabOneScreen() {
 							</View>
 						</Card.Content>
 						<Card.Actions>
-							<Button >Ver</Button>
+							<Button onPress={() => seeDetail(request)}>Ver</Button>
 						</Card.Actions>
 					</Card>
 				))}
@@ -133,11 +153,11 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
 	containerLoading: {
 		flex: 1,
-		height: "100%",
+		minHeight: "100%",
 	},
 	container: {
 		flex: 1,
-		height: "100%",
+		minHeight: "100%",
 	},
 	cardBudget: {
 		margin: 10,

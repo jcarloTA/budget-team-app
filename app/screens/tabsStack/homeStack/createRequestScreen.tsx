@@ -4,15 +4,20 @@ import { View, StyleSheet, Alert, ScrollView } from "react-native";
 import { TextInput, Button, Title } from "react-native-paper";
 import { useState } from "react";
 import { useRequest } from "../../../hooks/use.requests";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RequestInterface } from "../../../interfaces/request.interface";
 
 
 type CreateREquestProps = {
 	route: any;
 }
-
+type RootStackParamList = {
+	requestCreatedDetail: RequestInterface;
+	// other routes can be added here
+};
 export default function CreateRequestScreen({route}: CreateREquestProps) {
 
-
+	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 	const [reason, setReason] = useState("");
 	const [description, setDescription] = useState("");
 	const [amount, setAmount] = useState("");
@@ -35,6 +40,8 @@ export default function CreateRequestScreen({route}: CreateREquestProps) {
                 budgetId: budgetId
             }
             const response = await createRequestPost(requestData);
+			console.log('response',response);
+			navigation.navigate("requestCreatedDetail", response);
             Alert.alert("Solicitud creada", "La solicitud ha sido creada correctamente.");
             setReason("");
             setDescription("");
@@ -50,7 +57,7 @@ export default function CreateRequestScreen({route}: CreateREquestProps) {
 	};
 	return (
 		<ScrollView style={styles.container}>
-			<Title style={styles.title}>Crear Solicitud {budgetId}</Title>
+			<Title style={styles.title}>Crear Solicitud </Title>
 
 			{/* Formulario con React Native Paper */}
 			<TextInput
