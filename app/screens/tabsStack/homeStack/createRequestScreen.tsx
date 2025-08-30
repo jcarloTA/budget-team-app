@@ -41,7 +41,7 @@ export default function CreateRequestScreen({route}: CreateREquestProps) {
             }
             const response = await createRequestPost(requestData);
 			console.log('response',response);
-			navigation.navigate("requestCreatedDetail", response);
+			// navigation.navigate("requestCreatedDetail", response);
             Alert.alert("Solicitud creada", "La solicitud ha sido creada correctamente.");
             setReason("");
             setDescription("");

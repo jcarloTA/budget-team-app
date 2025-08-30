@@ -21,7 +21,7 @@ export const createRequest = async (requestData: RequestCreateInterface) => {
     const response = await apiAxios.post('/request', requestData); // Ajusta la ruta según tu API
     return response.data; // Devuelve la solicitud creada
   } catch (error: any) {
-    console.error('Error creating request:', error);
+    console.error('Error creating request:', JSON.stringify(error));
     throw new Error(error.response?.data?.message || 'Error creating request');
   }
 };
