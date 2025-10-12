@@ -24,7 +24,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 
     return data; // Retorna el token recibido
   } catch (error: any) {
-    console.error('Login failed:', error);
+    console.error('Login failed:', JSON.stringify(error));
     throw new Error(error.response?.data?.message || 'Login failed');
   }
 };
