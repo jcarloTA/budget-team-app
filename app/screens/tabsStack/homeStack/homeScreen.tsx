@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView, Alert } from "react-native";
 
 import { useEffect } from "react";
 import { useBudget } from "../../../hooks/use.budget";
@@ -33,26 +33,40 @@ export default function TabOneScreen() {
 			headerRight: () => (
 				<>
 					<Button
-						onPress={() =>
-							navigation.navigate("create", {
-								budgetId: budgets[0]?.id,
-							})
-						}
+						onPress={() => {
+							if (budgets && budgets.length > 0 && budgets[0].id) {
+								navigation.navigate("create", {
+									budgetId: budgets[0].id,
+								});
+							} else {
+								Alert.alert("Error", "No hay presupuesto disponible para crear solicitudes");
+							}
+						}}
+						disabled={!budgets || budgets.length === 0 || !budgets[0]?.id}
+						textColor="#fff"
 					>
-						<FontAwesome size={16} name="plus" />
+						<FontAwesome size={16} name="plus" color="#fff" />
 					</Button>
-					<Button onPress={() => getData()}>
-						<FontAwesome size={16} name="refresh" />
+					<Button onPress={() => getData()} textColor="#fff">
+						<FontAwesome size={16} name="refresh" color="#fff" />
 					</Button>
 				</>
 			),
 		});
-	}, [navigation]);
+	}, [navigation, budgets]);
 
 	useEffect(() => {
 		getBudgets();
 		getRequests();
 	}, []);
+
+	// Debug: Log cuando los budgets cambien
+	useEffect(() => {
+		if (budgets && budgets.length > 0) {
+			console.log('Budgets loaded:', budgets);
+			console.log('First budget ID:', budgets[0].id);
+		}
+	}, [budgets]);
 
 	const getData = () => {
 		getBudgets();

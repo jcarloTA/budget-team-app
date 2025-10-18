@@ -11,7 +11,7 @@ import axios from "axios"; // Usamos Axios para la solicitud
 import { RequestInterface } from "../../../interfaces/request.interface";
 import { changeStatusRequest } from "../../../services/request.service";
 import { useNavigation } from "@react-navigation/native";
-import { fetchProofs, uploadProof } from "../../../services/proof.service";
+import { fetchProofs, uploadProof, getSignedUrls } from "../../../services/proof.service";
 import { ProofInterface } from "../../../interfaces/proofs.interface";
 import { List } from "react-native-paper";
 import * as DocumentPicker from "expo-document-picker";
@@ -39,7 +39,9 @@ const RequestDetailScreen: React.FC<any> = ({ route }: CreateREquestProps) => {
 	const loadProofs = async () => {
 		try {
 			const proofs = await fetchProofs(id);
-			setProofs(proofs);
+			// Obtener URLs firmadas para todos los archivos
+			const proofsWithSignedUrls = await getSignedUrls(proofs);
+			setProofs(proofsWithSignedUrls);
 		} catch (error) {
 			console.error("Error loading proofs:", error);
 			Alert.alert("Error", "Hubo un problema cargando las pruebas.");
@@ -122,6 +124,12 @@ const RequestDetailScreen: React.FC<any> = ({ route }: CreateREquestProps) => {
 		);
 	};
 
+	const openFile = (url: ProofInterface) => {
+		console.log("url", url.fileUrl);
+		console.log("signedUrl", url.signedUrl);
+		Linking.openURL(url.signedUrl || url.fileUrl);
+	};
+
 	return (
 		<ScrollView style={styles.container}>
 			<Title>{reason}</Title>
@@ -169,7 +177,7 @@ const RequestDetailScreen: React.FC<any> = ({ route }: CreateREquestProps) => {
 					).toLocaleString()}`}
 					left={() => <List.Icon icon="file" />}
 					right={() => (
-						<Button onPress={() => Linking.openURL(proof.fileUrl)}>
+						<Button onPress={() => openFile(proof)}>
 							Ver archivo
 						</Button>
 					)}

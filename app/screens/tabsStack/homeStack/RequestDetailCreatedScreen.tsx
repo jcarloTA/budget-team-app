@@ -11,7 +11,7 @@ import axios from "axios"; // Usamos Axios para la solicitud
 import { RequestInterface } from "../../../interfaces/request.interface";
 import { changeStatusRequest } from "../../../services/request.service";
 import { useNavigation } from "@react-navigation/native";
-import { fetchProofs, uploadProof } from "../../../services/proof.service";
+import { fetchProofs, uploadProofMultipleMethods, getSignedUrls } from "../../../services/proof.service";
 import { ProofInterface } from "../../../interfaces/proofs.interface";
 import { List } from "react-native-paper";
 import * as DocumentPicker from "expo-document-picker";
@@ -39,7 +39,9 @@ const RequestDetailCreatedScreen: React.FC<any> = ({ route }: CreateREquestProps
 	const loadProofs = async () => {
 		try {
 			const proofs = await fetchProofs(id);
-			setProofs(proofs);
+			// Obtener URLs firmadas para todos los archivos
+			const proofsWithSignedUrls = await getSignedUrls(proofs);
+			setProofs(proofsWithSignedUrls);
 		} catch (error) {
 			console.error("Error loading proofs:", error);
 			Alert.alert("Error", "Hubo un problema cargando las pruebas.");
@@ -59,24 +61,50 @@ const RequestDetailCreatedScreen: React.FC<any> = ({ route }: CreateREquestProps
 			if (!assets || assets.length === 0) {
 				return;
 			}
-			const formData = new FormData();
+
 			const fileAsset = assets[0];
-			const file = {
-				name: fileAsset.name.split(".")[0],
+			
+			// Crear FormData de manera más compatible
+			const formData = new FormData();
+			
+			// Configurar el archivo con las propiedades correctas
+			formData.append("file", {
 				uri: fileAsset.uri,
-				type: fileAsset.mimeType,
-				size: fileAsset.size,
-			};
-			formData.append("file", file as any);
+				type: fileAsset.mimeType || 'application/octet-stream',
+				name: fileAsset.name || 'file',
+			} as any);
+
 			console.log("formData", formData);
-			const response = await uploadProof(id, formData);
+			console.log("File info:", {
+				name: fileAsset.name,
+				size: fileAsset.size,
+				type: fileAsset.mimeType,
+				uri: fileAsset.uri
+			});
+
+			// Intentar primero con fetch, si falla usar axios
+		const response = await uploadProofMultipleMethods(id, formData);
+			
 			if (response) {
 				Alert.alert("Success", "Archivo subido correctamente");
+				loadProofs(); // Recargar la lista de archivos
 			}
-			loadProofs();
-		} catch (error) {
+		} catch (error: any) {
 			console.error("Error seleccionando archivo:", error);
-			Alert.alert("Error", "Hubo un problema al seleccionar el archivo.");
+			
+			// Manejar el error específico de ACL
+			if (error.message && error.message.includes("bucket does not allow ACLs")) {
+				Alert.alert(
+					"Error de Configuración", 
+					"El servidor tiene un problema de configuración con el almacenamiento de archivos. Por favor contacta al administrador del sistema.",
+					[
+						{ text: "Entendido", style: "default" },
+						{ text: "Reintentar", onPress: () => handleSelectFile() }
+					]
+				);
+			} else {
+				Alert.alert("Error", "Hubo un problema al seleccionar el archivo.");
+			}
 		} finally {
 			setLoadingFile(false);
 		}
@@ -150,7 +178,7 @@ const RequestDetailCreatedScreen: React.FC<any> = ({ route }: CreateREquestProps
 					).toLocaleString()}`}
 					left={() => <List.Icon icon="file" />}
 					right={() => (
-						<Button onPress={() => Linking.openURL(proof.fileUrl)}>
+						<Button onPress={() => Linking.openURL(proof.signedUrl || proof.fileUrl)}>
 							Ver archivo
 						</Button>
 					)}

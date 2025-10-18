@@ -31,8 +31,8 @@ export default function HomeAdminScreen() {
 			title: "Inicio",
 			headerRight: () => (
 				<>
-					<Button onPress={() => getInitData()}>
-						<FontAwesome size={16} name="refresh" />
+					<Button onPress={() => getInitData()} textColor="#fff">
+						<FontAwesome size={16} name="refresh" color="#fff" />
 					</Button>
 				</>
 			),

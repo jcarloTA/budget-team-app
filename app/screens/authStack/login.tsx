@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { TextInput, Button, Headline, Subheading } from 'react-native-paper';
+import { TextInput, Button, Headline, Subheading, HelperText } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login } from '../../services/auth.service'; // Importa el servicio de login
 import { useNavigation } from '@react-navigation/native';
+import { useValidation } from '../../hooks/useValidation';
+import { loginValidator } from '../../utils/validation';
 
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -21,10 +23,44 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Hook de validación
+  const {
+    errors,
+    isValid,
+    validateField,
+    validateAll,
+    clearErrors,
+    hasError,
+    getFieldError
+  } = useValidation({
+    validator: loginValidator,
+    validateOnChange: true
+  });
 
-  
   const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  // Función para manejar cambios en los campos con validación
+  const handleFieldChange = (field: string, value: string) => {
+    switch (field) {
+      case 'email':
+        setEmail(value);
+        break;
+      case 'password':
+        setPassword(value);
+        break;
+    }
+    validateField(field, value);
+  };
   const handleLogin = async () => {
+    // Validación completa antes de enviar
+    const formData = { email, password };
+    const isFormValid = validateAll(formData);
+
+    if (!isFormValid) {
+      Alert.alert("Error", "Por favor, corrige los errores en el formulario.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const dataLogin = await login(email, password); // Llamada al servicio de login
@@ -50,27 +86,43 @@ const LoginScreen: React.FC<LoginScreenProps> = () => {
       <Subheading style={styles.subtitle}>Ingresa tus credenciales</Subheading>
       
       <TextInput
-        label="Email"
+        label="Email *"
         value={email}
         keyboardType='email-address'
-        onChangeText={setEmail}
+        onChangeText={(value) => handleFieldChange('email', value)}
         style={styles.input}
         mode="outlined"
+        error={hasError('email')}
+        placeholder="usuario@ejemplo.com"
+        autoCapitalize="none"
+        autoCorrect={false}
       />
+      <HelperText type="error" visible={hasError('email')}>
+        {getFieldError('email')}
+      </HelperText>
       
       <TextInput
-        label="Password"
+        label="Contraseña *"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(value) => handleFieldChange('password', value)}
         style={styles.input}
         secureTextEntry
         mode="outlined"
+        error={hasError('password')}
+        placeholder="Mínimo 6 caracteres"
       />
+      <HelperText type="error" visible={hasError('password')}>
+        {getFieldError('password')}
+      </HelperText>
       
-      <Button mode="contained" onPress={handleLogin} style={styles.button}
-              loading={isLoading}
-              disabled={isLoading}>
-        Iniciar sesion
+      <Button 
+        mode="contained" 
+        onPress={handleLogin} 
+        style={styles.button}
+        loading={isLoading}
+        disabled={isLoading || !isValid}
+      >
+        Iniciar sesión
       </Button>
     </View>
   );
@@ -84,17 +136,22 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
+    fontSize: 28,
+    fontWeight: 'bold',
   },
   subtitle: {
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
+    fontSize: 16,
+    opacity: 0.7,
   },
   input: {
-    marginBottom: 10,
+    marginBottom: 5,
   },
   button: {
-    marginTop: 20,
+    marginTop: 30,
+    paddingVertical: 8,
   },
 });
 

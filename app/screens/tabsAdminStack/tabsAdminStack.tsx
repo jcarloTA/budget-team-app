@@ -1,6 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Pressable } from 'react-native';
+import { Pressable, StatusBar } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -21,14 +21,31 @@ const Tab = createBottomTabNavigator();
 export default function TabsAdminStack() {
 
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeAdminStackScreen}
-       options={{
-        headerShown: false,
-        tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-      }}
-       />
-      <Tab.Screen name="Settings" component={TabTwoAdminScreen} />
-    </Tab.Navigator>
+    <>
+      <StatusBar barStyle="light-content" backgroundColor="#f4511e" translucent={false} />
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: '#f4511e',
+          tabBarInactiveTintColor: '#666',
+          tabBarStyle: {
+            backgroundColor: '#fff',
+            borderTopColor: '#e0e0e0',
+          },
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeAdminStackScreen}
+         options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+        }}
+         />
+        <Tab.Screen name="Settings" component={TabTwoAdminScreen} 
+         options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
+        }}
+         />
+      </Tab.Navigator>
+    </>
   );
 }

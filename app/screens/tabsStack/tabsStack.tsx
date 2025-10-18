@@ -21,14 +21,28 @@ const Tab = createBottomTabNavigator();
 export default function TabsStack() {
 
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#f4511e',
+        tabBarInactiveTintColor: '#666',
+        tabBarStyle: {
+          backgroundColor: '#fff',
+          borderTopColor: '#e0e0e0',
+        },
+      }}
+    >
       <Tab.Screen name="Home" component={HomeStackScreen}
        options={{
         headerShown: false,
         tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
       }}
        />
-      <Tab.Screen name="Settings" component={TabTwoScreen} />
+      <Tab.Screen name="Settings" component={TabTwoScreen} 
+       options={{
+        headerShown: false,
+        tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
+      }}
+       />
     </Tab.Navigator>
   );
 }
